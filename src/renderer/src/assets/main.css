@@ -1,0 +1,27 @@
+@import './base.css';
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Microsoft YaHei', SimHei, 'WenQuanYi Micro Hei', sans-serif;
+  background-image: url('./wavy-lines.svg');
+  background-size: cover;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 80px;
+  height: 100vh; /* 设置高度以启用内部滚动 */
+  overflow: auto; /* 启用垂直滚动 */
+
+  /* 隐藏滚动条但保留滚动功能 */
+  scrollbar-width: none; /* Firefox */
+
+  &::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+  }
+}
