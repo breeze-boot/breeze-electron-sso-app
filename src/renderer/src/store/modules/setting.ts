@@ -21,8 +21,7 @@ const initTheme = (): Theme => {
     themeColor: CookiesStorage.get(CookiesKey.THEME_COLOR) || setting.defaultThemeColor,
     size: CookiesStorage.get(CookiesKey.SIZE) || setting.size,
     lightFont: setting.defaultLightFont,
-    darkFont: setting.defaultDarkFont,
-    logoUrl: setting.defaultLogoUrl
+    darkFont: setting.defaultDarkFont
   }
 }
 

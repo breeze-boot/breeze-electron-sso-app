@@ -2,6 +2,7 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
   "include": ["electron.vite.config.*", "src/main/**/*", "src/preload/**/*"],
   "compilerOptions": {
+    "allowImportingTsExtensions": true, // 允许导入 .ts 扩展名的文件
     "composite": true,
     "types": ["electron-vite/node"]
   }

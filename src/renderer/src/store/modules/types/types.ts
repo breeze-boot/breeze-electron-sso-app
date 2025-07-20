@@ -14,7 +14,7 @@ export interface UserState {
   userInfo: UserInfoData
   tenantId: number | null
   accessToken: string
-  refreshToken: string
+  refreshToken?: string
   roleCodes: string[]
   permissions: string[]
 }

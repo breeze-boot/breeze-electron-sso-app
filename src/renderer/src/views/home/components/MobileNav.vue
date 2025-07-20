@@ -23,6 +23,7 @@
 import useUserStore from '@renderer/store/modules/user'
 import { ElMessageBox } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import { computed } from 'vue'
 
 const props = defineProps({
   userInfo: {
@@ -30,13 +31,30 @@ const props = defineProps({
     default: () => ({})
   }
 })
+
 const { t } = useI18n()
-
 const userStore = useUserStore()
-
 const emits = defineEmits(['logout'])
 
+const showAvatar = computed(() => {
+  return props.userInfo?.avatar
+})
+const avatar = computed(() => {
+  return props.userInfo?.avatar
+})
+
 console.log(props.userInfo)
+
+/**
+ * 修改密码
+ */
+const handleEditPassword = async () => {}
+
+/**
+ * 个人中心
+ */
+const handlePersonalCenter = async () => {}
+
 /**
  *退出登录
  */

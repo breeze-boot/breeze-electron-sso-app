@@ -76,6 +76,10 @@ export type AuthoritiesDatas = AuthoritiesData[]
 export interface UserInfoData {
   password: null
   username: string
+  roleName: string
+  realName: string
+  loginCount: number
+  lastLoginTime: string
   avtar: string
   tenantId: number
   permissions: object

@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue'
-import useUserStore from '@renderer/store/modules/user'
-import useSettingStore from '@renderer/store/modules/setting'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import SvgButton from '@renderer/components/SvgButton/index.vue'
 import { SelectData } from '@renderer/types/types.ts'
 import { selectTenant } from '@renderer/api/auth/tenant'
 import { useMessage } from '@renderer/hooks/message'
+import useUserStore from '@renderer/store/modules/user'
+import useSettingStore from '@renderer/store/modules/setting'
+import SvgButton from '@renderer/components/SvgButton/index.vue'
 
 let $router = useRouter()
 let settingStore = useSettingStore()
@@ -83,7 +83,7 @@ const tenantName = computed(() => {
 
 <template>
   <!-- SSO登录场景容器 -->
-  <div class="sso-login-container" @keyup.enter="handleCheck">
+  <div class="sso-login-container">
     <div class="sso-login">
       <el-popover placement="bottom" trigger="hover">
         <el-select

@@ -4,21 +4,24 @@
  * @description: 完全响应式的用户欢迎页面（优化版）
  -->
 <script setup lang="ts">
-import { ref, onMounted, computed, onUnmounted } from 'vue'
+import { ref, onMounted, computed, onUnmounted, ComputedRef } from 'vue'
+import { ElMessage } from 'element-plus'
 import { loadGreetings } from '@renderer/utils/times'
 import useUserStore from '@renderer/store/modules/user'
 import useSettingStore from '@renderer/store/modules/setting.ts'
 import { SsoClientUrl } from '@renderer/api/home/type.ts'
 import { getHomeSsoClient } from '@renderer/api/home'
-import { ElMessage } from 'element-plus'
 import MobileNav from '@renderer/views/home/components/MobileNav.vue'
 import DesktopNav from '@renderer/views/home/components/DesktopNav.vue'
 import ActionItem from '@renderer/views/home/components/ActionItem.vue'
 import SvgButton from '@renderer/components/SvgButton/index.vue'
+import { UserInfoData } from '@renderer/types/types'
 
 // 状态管理
 const settingStore = useSettingStore()
 const userStore = useUserStore()
+
+const userInfo: ComputedRef<UserInfoData> = computed(() => userStore.userInfo)
 
 // 数据状态
 const ssoClient = ref<SsoClientUrl[]>([])
@@ -37,10 +40,6 @@ const isMobile = computed(() => windowWidth.value < breakpoints.MOBILE)
 const isTablet = computed(
   () => windowWidth.value >= breakpoints.MOBILE && windowWidth.value < breakpoints.TABLET
 )
-const isDesktop = computed(() => windowWidth.value >= breakpoints.TABLET)
-
-// 计算属性：用户信息是否存在
-const hasUserInfo = computed(() => !!userStore.userInfo?.username)
 
 // 计算属性：问候语样式
 const greetingStyle = computed(() => ({
@@ -78,7 +77,7 @@ const handleLoadSystem = async () => {
 }
 
 // 卡片点击动画
-const handleCardClick = (url: string) => {
+const handleCardClick = (event: MouseEvent, url: string) => {
   // 添加点击效果
   const linkElement = event.currentTarget as HTMLElement
   linkElement.classList.add('clicked')
@@ -114,24 +113,17 @@ onUnmounted(() => {
   <!-- 顶部导航栏 - 响应式调整 -->
   <header class="top-nav">
     <div class="logo" style="color: red">
-      <svg-button
-        :circle="true"
-        :loading="loading"
-        icon="electron"
-        width="1.4rem"
-        height="1.4rem"
-        type="primary"
-      />
+      <svg-button :circle="true" icon="electron" width="1.4rem" height="1.4rem" type="primary" />
       <span class="logo-text">企业管理平台</span>
     </div>
 
     <!-- 导航菜单根据设备类型显示不同布局 -->
     <div class="nav-menu">
       <template v-if="isMobile">
-        <mobile-nav :user-info="userStore.userInfo" @logout="userStore.logout" />
+        <mobile-nav :user-info="userInfo" @logout="userStore.logout" />
       </template>
       <template v-else>
-        <desktop-nav :user-info="userStore.userInfo" @logout="userStore.logout" />
+        <desktop-nav :user-info="userInfo" @logout="userStore.logout" />
       </template>
     </div>
   </header>
@@ -143,7 +135,7 @@ onUnmounted(() => {
       <el-card class="welcome-card animate-fade-in">
         <template #header>
           <div class="card-header">
-            <h2 class="card-title">欢迎回来，{{ userStore.userInfo?.username || '用户' }}</h2>
+            <h2 class="card-title">欢迎回来，{{ userInfo?.username || '用户' }}</h2>
             <div v-if="!isMobile" class="card-actions">
               <el-button size="small" type="text" icon="el-icon-refresh" @click="handleLoadSystem">
                 刷新
@@ -158,11 +150,11 @@ onUnmounted(() => {
             <div v-if="isMobile" class="mobile-profile">
               <el-avatar
                 :size="80"
-                :src="userStore.userInfo?.avatar || settingStore.settings.logoUrl"
+                :src="userInfo?.avatar || settingStore.settings.logoUrl"
                 class="user-avatar-big"
               />
               <h3 class="greeting-mobile" :style="greetingStyle">
-                {{ loadGreetings() }}，{{ userStore.userInfo?.username || '尊敬的用户' }}
+                {{ loadGreetings() }}，{{ userInfo?.username || '尊敬的用户' }}
               </h3>
             </div>
 
@@ -170,32 +162,28 @@ onUnmounted(() => {
             <div v-else class="desktop-profile">
               <el-avatar
                 :size="120"
-                :src="userStore.userInfo?.avatar || settingStore.settings.logoUrl"
+                :src="userInfo?.avatar || settingStore.settings.logoUrl"
                 class="user-avatar-big"
               />
               <div class="user-details">
                 <h3 class="greeting" :style="greetingStyle">
                   {{ loadGreetings() }}，{{
-                    userStore.userInfo?.realName || userStore.userInfo?.username || '尊敬的用户'
+                    userInfo?.realName || userInfo?.username || '尊敬的用户'
                   }}！
                 </h3>
                 <p class="welcome-message">每一天，都是您迈向卓越的新起点！</p>
 
                 <div class="user-stats">
                   <div class="stat-item">
-                    <span class="stat-value">{{
-                      userStore.userInfo?.roleName || '未分配角色'
-                    }}</span>
+                    <span class="stat-value">{{ userInfo?.roleName || '未分配角色' }}</span>
                     <span class="stat-label">角色</span>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-value">{{ userStore.userInfo?.loginCount || 0 }}</span>
+                    <span class="stat-value">{{ userInfo?.loginCount || 0 }}</span>
                     <span class="stat-label">登录次数</span>
                   </div>
                   <div class="stat-item">
-                    <span class="stat-value">{{
-                      userStore.userInfo?.lastLoginTime || '首次登录'
-                    }}</span>
+                    <span class="stat-value">{{ userInfo?.lastLoginTime || '首次登录' }}</span>
                     <span class="stat-label">上次登录</span>
                   </div>
                 </div>
@@ -229,16 +217,16 @@ onUnmounted(() => {
           <div v-else class="systems-list">
             <div
               v-for="(item, index) in ssoClient"
-              :key="item.clientId || index"
+              :key="index"
               class="system-card"
-              @click="handleCardClick(item.url)"
+              @click="handleCardClick($event, item.url)"
             >
               <div class="card-icon">
-                <i :class="item.iconClass || 'el-icon-link'" />
+                <i :class="'el-icon-link'" />
               </div>
               <div class="card-content">
-                <h3 class="card-name">{{ item.clientName }}</h3>
-                <p v-if="!isMobile" class="card-desc">{{ item.description || '点击访问' }}</p>
+                <h3 class="card-name">{{ item?.clientName }}</h3>
+                <p v-if="!isMobile" class="card-desc">{{ '点击访问' }}</p>
               </div>
             </div>
           </div>

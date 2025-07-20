@@ -7,6 +7,7 @@
     "src/preload/*.d.ts"
   ],
   "compilerOptions": {
+    "allowImportingTsExtensions": true, // 允许导入 .ts 扩展名的文件
     "composite": true,
     "baseUrl": ".",
     "paths": {

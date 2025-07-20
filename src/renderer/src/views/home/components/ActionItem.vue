@@ -7,7 +7,7 @@
     @mouseenter="hover = true"
     @mouseleave="hover = false"
   >
-    <div class="action-icon" :class="iconClass">
+    <div class="action-icon">
       <i :class="icon"></i>
     </div>
     <div class="action-text">{{ text }}</div>

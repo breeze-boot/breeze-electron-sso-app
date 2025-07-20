@@ -5,12 +5,12 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia'
 import { ElConfigProvider } from 'element-plus'
-import useSettingStore from '@renderer/store/modules/setting'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import en from 'element-plus/dist/locale/en.mjs'
+import useSettingStore from '@renderer/store/modules/setting'
 import { LANGUAGE, THEME } from '@renderer/utils/common.ts'
 
-let { settings, theme } = storeToRefs(useSettingStore())
+const { settings, theme } = storeToRefs(useSettingStore())
 </script>
 
 <template>

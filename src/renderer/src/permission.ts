@@ -16,7 +16,7 @@ const userStore = useUserStore(pinia)
 /**
  * 全局前置守卫
  */
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to, _, next) => {
   // 设置文档标题
   document.title = (to.meta.title || '') + ` | ${setting.title}`
   const token = userStore.accessToken as string

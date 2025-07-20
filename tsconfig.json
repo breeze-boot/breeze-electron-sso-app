@@ -1,5 +1,4 @@
 {
-  "allowImportingTsExtensions": true,
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
